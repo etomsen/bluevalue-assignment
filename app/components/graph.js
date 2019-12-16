@@ -1,14 +1,30 @@
 import Component from '@ember/component';
 import go from 'gojs';
 
-/**
- * TODO:
- * 1. [ ] Pass params data to graph
- * 2. [x] Linking
- * 3. [ ] Link Shifting
- * 4. [x] Relinking
- * 5. [ ] context menu for both nodes and text with one font-size button
- */
+function mapEdgeToGo(e) {
+  return {
+    to: e.end,
+    from: e.start
+  };
+}
+
+function mapVertexToGo(v) {
+  const result = {
+    key: `${v.modelName}-${v.id}`,
+    text: v.text,
+    font: `${v.fontSize}px serif`,
+    fill: v.fill || 'white'
+  };
+  if (v.modelName === 'vertex/node') {
+    result.fig = 'RoundedRectangle'
+  }
+  if (v.modelName === 'vertex/circle') {
+    result.fig = 'Circle'
+    result.radius = v.radius;
+  }
+  return result;
+}
+
 export default Component.extend({
   actions: {
     updateModel() {
@@ -16,26 +32,14 @@ export default Component.extend({
   },
   didReceiveAttrs() {
     this._super(...arguments);
-    const {vertices} = this;
-    if (Array.isArray(vertices)) {
-      this.set('vertices', vertices);
-    } else {
-      this.set('vertices', []);
-    }
   },
 
   didInsertElement() {
     const Graph = go.GraphObject.make;
     const graph = Graph(go.Diagram, this.elementId);
-    const nodeData = [
-      { key: 'Alfa', fill: "lightblue", fig: 'Circle'},
-      { key: 'Betta', fill: "lightgreen", fig: 'RoundedRectangle' },
-      { key: 'Gamma', fill: "lightblue", fig: 'RoundedRectangle'}
-    ];
-    const linkData = [
-      { to: 'Betta', from: 'Alfa'},
-      { to: 'Betta', from: 'Gamma'}
-    ];
+    const nodeData = this.vertices.map(mapVertexToGo);
+    const linkData = this.edges.map(mapEdgeToGo);
+
     const node = Graph(
       go.Shape,
       {
@@ -44,7 +48,8 @@ export default Component.extend({
         toLinkable: true
       },
       new go.Binding('figure', 'fig'),
-      new go.Binding('fill', 'fill')
+      new go.Binding('fill', 'fill'),
+      new go.Binding('radius', 'radius'),
     );
 
     graph.toolManager.linkingTool.temporaryLink = Graph(
@@ -84,8 +89,11 @@ export default Component.extend({
      */
     const nodeText = Graph(
       go.TextBlock,
-      { margin: 5 },
-      new go.Binding('text', 'key')
+      {
+        margin: 5
+      },
+      new go.Binding('text', 'text'),
+      new go.Binding('font', 'font'),
     );
     graph.nodeTemplate = Graph(
       go.Node,
@@ -95,9 +103,12 @@ export default Component.extend({
     );
     graph.linkTemplate = Graph(
       go.Link,
-      { relinkableFrom: true, relinkableTo: true },
+      {
+        relinkableFrom: true,
+        relinkableTo: true
+      },
       Graph(go.Shape),
-      Graph(go.Shape, { toArrow: "Standard" })
+      Graph(go.Shape, { toArrow: 'Standard' })
     );
     graph.model = new go.GraphLinksModel(nodeData, linkData);
     this.graph = graph;

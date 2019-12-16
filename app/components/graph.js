@@ -26,10 +26,6 @@ function mapVertexToGo(v) {
 }
 
 export default Component.extend({
-  actions: {
-    updateModel() {
-    }
-  },
   didReceiveAttrs() {
     this._super(...arguments);
   },
@@ -58,35 +54,6 @@ export default Component.extend({
       Graph(go.Shape, { stroke: 'red', strokeWidth: 2, strokeDashArray: [4, 2]})
     );
 
-    /**
-     * TODO: links shifting
-     * https://github.com/NorthwoodsSoftware/GoJS/blob/master/extensions/LinkShifting.html
-     */
-
-    /**
-     * 
-
-  var tempfromnode =
-    $(go.Node,
-      { layerName: "Tool" },
-      $(go.Shape, "RoundedRectangle",
-        { stroke: "chartreuse", strokeWidth: 3, fill: null,
-          portId: "", width: 1, height: 1 })
-    );
-  diagram.toolManager.linkingTool.temporaryFromNode = tempfromnode;
-  diagram.toolManager.linkingTool.temporaryFromPort = tempfromnode.port;
-
-  var temptonode =
-    $(go.Node,
-      { layerName: "Tool" },
-      $(go.Shape, "RoundedRectangle",
-        { stroke: "cyan", strokeWidth: 3, fill: null,
-          portId: "", width: 1, height: 1 })
-    );
-  diagram.toolManager.linkingTool.temporaryToNode = temptonode;
-  diagram.toolManager.linkingTool.temporaryToPort = temptonode.port;
-
-     */
     const nodeText = Graph(
       go.TextBlock,
       {
@@ -111,6 +78,11 @@ export default Component.extend({
       Graph(go.Shape, { toArrow: 'Standard' })
     );
     graph.model = new go.GraphLinksModel(nodeData, linkData);
+    graph.addModelChangedListener(function(evt) {
+      if (evt.isTransactionFinished) {
+        // TODO: call an action
+      }
+    });
     this.graph = graph;
   },
 

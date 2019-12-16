@@ -12,14 +12,14 @@ export default Factory.extend({
       server.createList('vertex/circle', 1, { graph });
       server.createList('edge', 5, { graph });
       const { vertexIds, edgeIds } = graph;
-      const vertexLinks = new Map();
-      edgeIds.forEach(id => {
-        const ids = [...vertexIds].filter(v => !vertexLinks.has(`${v.type}-${v.id}`) || vertexLinks.get(`${v.type}-${v.id}`) < 2);
-        const [start, end] = ids.sort(() => 0.5 - Math.random()).slice(0, 2).map(i => `${i.type}-${i.id}`);
+      const ids = vertexIds.sort(() => 0.5 - Math.random()).map(i => `${i.type}-${i.id}`);
+      edgeIds.forEach((id, i) => {
         const edge = server.schema.edges.find(id);
-        edge.update({start, end});
-        vertexLinks.set(start, vertexLinks.has(start) ? 2 : 1);
-        vertexLinks.set(end, vertexLinks.has(end) ? 2 : 1);
+        if (i < ids.length-1) {
+          const start = ids[i];
+          const end = ids[i+1];
+          edge.update({start, end});
+        }
       });
     }
   })

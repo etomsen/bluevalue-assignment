@@ -26,11 +26,8 @@ function mapVertexToGo(v) {
 }
 
 export default Component.extend({
-  didReceiveAttrs() {
-    this._super(...arguments);
-  },
-
   didInsertElement() {
+    const onChange = this.onChange;
     const Graph = go.GraphObject.make;
     const graph = Graph(go.Diagram, this.elementId);
     const nodeData = this.vertices.map(mapVertexToGo);
@@ -78,10 +75,15 @@ export default Component.extend({
       Graph(go.Shape, { toArrow: 'Standard' })
     );
     graph.model = new go.GraphLinksModel(nodeData, linkData);
-    graph.addModelChangedListener(function(evt) {
-      if (evt.isTransactionFinished) {
-        // TODO: call an action
+    graph.addModelChangedListener(function(event) {
+      if (!event.isTransactionFinished) {
+        return;
       }
+      if (event.oldValue === 'Initial Layout') {
+        // skip first change
+        return;
+      }
+      onChange && onChange(event.model);
     });
     this.graph = graph;
   },

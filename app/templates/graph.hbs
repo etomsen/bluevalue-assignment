@@ -3,4 +3,10 @@
     height: 100%;
   }
 </style>
-<Graph @vertices={{model.vertices}} @edges={{model.edges}} class="graph"/>
+<Toolbar @saving={{showSpinner}}/>
+<Graph
+  class="graph"
+  @vertices={{model.vertices}}
+  @edges={{model.edges}}
+  @onChange={{action "changeState"}}
+/>

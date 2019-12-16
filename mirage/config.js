@@ -12,4 +12,5 @@ export default function() {
   });
 
   this.get('/graphs/:id');
+  this.patch('/graphs/:id');
 }

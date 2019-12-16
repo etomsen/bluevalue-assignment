@@ -1,0 +1,41 @@
+<style>
+  .navbar-item--full-width {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .buttons--right {
+    width: 100px;
+    margin-left: auto;
+    align-items: flex-end;
+    display: flex;
+    flex-direction: column;
+  }
+}
+</style>
+
+<nav class="navbar is-primary has-shadow" role="navigation" aria-label="main navigation">
+  <div class="navbar-item navbar-item--full-width">
+    <div class="buttons buttons--right">
+      {{#if loading}}
+        <button disabled class="button refresh-button is-primary is-inverted is-outlined">
+          <span class="icon">
+            <i class="fas fa fa-spinner"></i>
+          </span>
+          <span>
+            Saving...
+          </span>
+        </button>
+      {{else}}
+        <button class="button refresh-button is-primary is-inverted is-outlined">
+          <span class="icon">
+            <i class="fas fa fa-save"></i>
+          </span>
+          <span>
+            Save
+          </span>
+        </button>
+      {{/if}}
+    </div>
+  </div>
+</nav>

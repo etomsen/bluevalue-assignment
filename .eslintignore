@@ -2,9 +2,6 @@
 /blueprints/*/files/
 /vendor/
 
-# mirage
-/mirage/mirage
-
 # compiled output
 /dist/
 /tmp/

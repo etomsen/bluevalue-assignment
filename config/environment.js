@@ -2,7 +2,7 @@
 
 module.exports = function(environment) {
   let ENV = {
-    modulePrefix: 'assignment',
+    modulePrefix: 'graph',
     environment,
     rootURL: '/',
     locationType: 'auto',

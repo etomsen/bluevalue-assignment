@@ -2,6 +2,10 @@ import Route from '@ember/routing/route';
 
 export default Route.extend({
   model() {
-    return this.store.find('graph');
+    return {
+      name: 'Graph name',
+      edges: [],
+      vertices: []
+    }
   }
 });

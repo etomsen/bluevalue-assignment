@@ -1,12 +1,41 @@
 <style>
   .graph {
     height: 100%;
+    position: relative;
+  }
+
+  .graph__menu {
+    display: none;
+    position: absolute;
+    z-index: 999;
+  }
+
+  .graph__menu--active {
+    display: block;
   }
 </style>
+
 <Toolbar @saving={{showSpinner}}/>
 <Graph
   class="graph"
   @vertices={{model.vertices}}
   @edges={{model.edges}}
-  @onChange={{action "changeState"}}
-/>
+  @onChange={{action "changeState"}}/>
+
+<div id="contextMenu" class="dropdown-menu graph__menu" role="menu">
+  <div class="dropdown-content">
+    <div class="dropdown-item">
+      <span class="icon">
+        <i class="fa fas fa-search-plus" aria-hidden="true"></i>
+      </span>
+      Increase font
+    </div>
+    <hr class="dropdown-divider">
+    <div class="dropdown-item">
+      <span class="icon">
+        <i class="fa fas fa-search-minus" aria-hidden="true"></i>
+      </span>
+      Decrease font
+    </div>
+  </div>
+</div>

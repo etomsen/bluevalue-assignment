@@ -2,8 +2,9 @@ import { Factory, trait } from 'ember-cli-mirage';
 import faker from 'faker';
 
 export default Factory.extend({
-  name() {
-    return faker.lorem.sentence();
+  text() {
+    const numberWords = faker.random.number({min: 50, max: 300});
+    return faker.lorem.words(numberWords);
   },
 
   withSixVertices: trait({

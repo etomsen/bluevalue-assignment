@@ -1,25 +1,38 @@
 <style>
-  .gojs-diagram {
+  .blue-value-graph__diagram {
     height: 100%;
     width: 100%;
   }
+  .blue-value-graph__menu {
+    display: none;
+    position: absolute;
+    z-index: 999;
+  }
+
+  .blue-value-graph__menu--active {
+    display: block;
+  }
 </style>
 
-<div class="gojs-diagram"></div>
-<div class="dropdown-menu graph__menu" role="menu">
+<div class="blue-value-graph__diagram"></div>
+<div class="dropdown-menu blue-value-graph__menu" role="menu">
   <div class="dropdown-content">
-    <a class="dropdown-item" role="button" {{action "incFontSize" event on="mouseUp" }} href="#">
+    <div class="dropdown-item has-text-primary has-text-weight-bold">
+      Font Size: {{contextMenuFontSize}}px
+    </div>
+    <hr class="dropdown-divider">
+    <div class="dropdown-item" role="button" onclick={{action "incFontSize"}}>
       <span class="icon">
         <i class="fa fas fa-search-plus" aria-hidden="true"></i>
       </span>
-      Inc font size
-    </a>
+      <span>Increment Font</span>
+    </div>
     <hr class="dropdown-divider">
-    <div class="dropdown-item" role="button" {{action "decFontSize" event on="mouseUp" }}>
+    <div class="dropdown-item" role="button" onclick={{action "decFontSize"}}>
       <span class="icon">
         <i class="fa fas fa-search-minus" aria-hidden="true"></i>
       </span>
-      Dec font size
+      <span>Decrement Font</span>
     </div>
   </div>
 </div>

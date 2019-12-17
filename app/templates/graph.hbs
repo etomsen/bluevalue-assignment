@@ -1,24 +1,33 @@
 <style>
-  .graph {
+  .blue-value-route {
     height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .blue-value-route__graph {
     position: relative;
+    flex: 1;
   }
 
-  .graph__menu {
-    display: none;
-    position: absolute;
-    z-index: 999;
-  }
-
-  .graph__menu--active {
-    display: block;
+  .blue-value-route__editor {
+    height: 200px;
   }
 </style>
 
-<Toolbar @saving={{showSpinner}}/>
-<Graph
-  class="graph"
-  @vertices={{model.vertices}}
-  @edges={{model.edges}}
-  @onChange={{action "changeState"}}
-/>
+<div class="blue-value-route">
+  <Toolbar @saving={{showSpinner}}/>
+  <Graph
+    class="blue-value-route__graph"
+    @vertices={{model.vertices}}
+    @edges={{model.edges}}
+    @onChange={{action "changeState"}}
+  />
+  {{!-- {{summernote-editor
+    class=blue-value-route__editor
+    focus=false
+    btnSize=bs-sm
+    airMode=false
+    content=model.text
+  }} --}}
+</div>

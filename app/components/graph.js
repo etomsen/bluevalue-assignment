@@ -1,4 +1,5 @@
 import Component from '@ember/component';
+import { computed } from '@ember/object';
 import go from 'gojs';
 
 function mapEdgeToGo(e) {
@@ -33,15 +34,25 @@ export default Component.extend({
   actions: {
     incFontSize() {
       const obj = this.contextMenuObject;
-      const newFontSize = obj.part.data.model.fontSize += 5;
+      const newFontSize = obj.part.data.model.fontSize *= 2;
       this.updateNodeFontSize(obj, newFontSize);
+      this.notifyPropertyChange('contextMenuObject')
     },
     decFontSize() {
       const obj = this.contextMenuObject;
-      const newFontSize = obj.part.data.model.fontSize -= 5;
+      const newFontSize = obj.part.data.model.fontSize /= 2;
       this.updateNodeFontSize(obj, newFontSize);
+      this.notifyPropertyChange('contextMenuObject')
     }
   },
+
+  contextMenuFontSize: computed('contextMenuObject', function() {
+    const obj = this.get('contextMenuObject');
+    if (!obj) {
+      return 0;
+    }
+    return obj.part.data.model.fontSize;
+  }),
 
   willDestroyElement() {
     this.graph.destroy();
@@ -64,7 +75,7 @@ export default Component.extend({
 
   createGraph() {
     const Graph = go.GraphObject.make;
-    const graphElement = this.element.querySelector('.gojs-diagram');
+    const graphElement = this.element.querySelector('.blue-value-graph__diagram');
     const graph = Graph(go.Diagram, graphElement);
     const nodeData = this.vertices.map(mapVertexToGo);
     const linkData = this.edges.map(mapEdgeToGo);
@@ -135,7 +146,7 @@ export default Component.extend({
   },
 
   showContextMenu(obj, diagram) {
-    this.contextMenuElement.classList.add('graph__menu--active');
+    this.contextMenuElement.classList.add('blue-value-graph__menu--active');
     const {x, y} = diagram.lastInput.viewPoint;
     this.contextMenuElement.style.left = `${x}px`;
     this.contextMenuElement.style.top = `${y}px`;
@@ -144,7 +155,7 @@ export default Component.extend({
   },
 
   hideContextMenu() {
-    this.contextMenuElement.classList.remove('graph__menu--active');
+    this.contextMenuElement.classList.remove('blue-value-graph__menu--active');
     window.removeEventListener('click', this.onWindowClick.bind(this), true);
   },
 

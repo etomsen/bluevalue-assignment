@@ -3,6 +3,7 @@ import go from 'gojs';
 
 function mapEdgeToGo(e) {
   return {
+    model: e,
     font: `${e.fontSize}px serif`,
     text: e.text,
     to: e.end,
@@ -12,6 +13,7 @@ function mapEdgeToGo(e) {
 
 function mapVertexToGo(v) {
   const result = {
+    model: v,
     key: `${v.modelName}-${v.id}`,
     text: v.text,
     font: `${v.fontSize}px serif`,
@@ -28,6 +30,18 @@ function mapVertexToGo(v) {
 }
 
 export default Component.extend({
+  actions: {
+    incFontSize() {
+      const obj = this.contextMenuObject;
+      const newFontSize = obj.part.data.model.fontSize += 5;
+      this.updateNodeFontSize(obj, newFontSize);
+    },
+    decFontSize() {
+      const obj = this.contextMenuObject;
+      const newFontSize = obj.part.data.model.fontSize -= 5;
+      this.updateNodeFontSize(obj, newFontSize);
+    }
+  },
 
   willDestroyElement() {
     this.graph.destroy();
@@ -42,9 +56,16 @@ export default Component.extend({
     this.set('graph', graph);
   },
 
+  updateNodeFontSize(node, fontSize) {
+    this.graph.model.commit(function(m) {
+      m.set(node.data, 'font', `${fontSize}px serif`);
+    }, 'update font size');
+  },
+
   createGraph() {
     const Graph = go.GraphObject.make;
-    const graph = Graph(go.Diagram, this.elementId);
+    const graphElement = this.element.querySelector('.gojs-diagram');
+    const graph = Graph(go.Diagram, graphElement);
     const nodeData = this.vertices.map(mapVertexToGo);
     const linkData = this.edges.map(mapEdgeToGo);
     const contextMenu = Graph(go.HTMLInfo, {
@@ -113,13 +134,13 @@ export default Component.extend({
     return graph;
   },
 
-  showContextMenu(obj, diagram, tool) {
-    // var cmd = diagram.commandHandler;
+  showContextMenu(obj, diagram) {
     this.contextMenuElement.classList.add('graph__menu--active');
     const {x, y} = diagram.lastInput.viewPoint;
     this.contextMenuElement.style.left = `${x}px`;
     this.contextMenuElement.style.top = `${y}px`;
     window.addEventListener('click', this.onWindowClick.bind(this), true);
+    this.set('contextMenuObject', obj);
   },
 
   hideContextMenu() {
@@ -134,7 +155,7 @@ export default Component.extend({
   },
 
   createContextMenu() {
-    const contextMenuElement = document.getElementById('contextMenu');
+    const contextMenuElement = this.element.querySelector('.dropdown-menu');
     contextMenuElement.addEventListener('contextmenu', function(e) {
       e.preventDefault();
       return false;

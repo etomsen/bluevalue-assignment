@@ -1,17 +1,11 @@
 <style>
   .blue-value-route {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+    min-height: 100%;
+    overflow: auto;
   }
 
   .blue-value-route__graph {
-    position: relative;
-    flex: 1;
-  }
-
-  .blue-value-route__editor {
-    height: 200px;
+    height: 400px
   }
 </style>
 
@@ -23,11 +17,6 @@
     @edges={{model.edges}}
     @onChange={{action "changeState"}}
   />
-  {{!-- {{summernote-editor
-    class=blue-value-route__editor
-    focus=false
-    btnSize=bs-sm
-    airMode=false
-    content=model.text
-  }} --}}
+  <Editor @text={{getRandomText}}/>
+  <Editor @text={{getRandomText}}/>
 </div>

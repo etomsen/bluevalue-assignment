@@ -1,5 +1,6 @@
 import Controller from '@ember/controller';
 import { debounce } from '@ember/runloop';
+import faker from 'faker';
 
 export default Controller.extend({
   actions: {
@@ -15,4 +16,9 @@ export default Controller.extend({
       this.set('showSpinner', false);
     })
   },
+
+  getRandomText: function() {
+    const numberWords = faker.random.number({min: 50, max: 300});
+    return faker.lorem.words(numberWords);
+  }
 });

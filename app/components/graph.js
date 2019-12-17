@@ -54,6 +54,14 @@ export default Component.extend({
     return obj.part.data.model.fontSize;
   }),
 
+  contextMenuEntity: computed('contextMenuObject', function() {
+    const obj = this.get('contextMenuObject');
+    if (!obj) {
+      return '';
+    }
+    return obj.part.data.model.modelName;
+  }),
+
   willDestroyElement() {
     this.graph.destroy();
     this._super(...arguments);

@@ -1,9 +1,6 @@
 import Component from '@ember/component';
-import computedStyle from 'ember-computed-style';
 
 export default Component.extend({
-  style: computedStyle('editorStyle'),
-
   willDestroyElement() {
     this.summernote.destroy();
     this._super(...arguments);
@@ -12,6 +9,9 @@ export default Component.extend({
   didInsertElement() {
     const summernote = this.createSummernote();
     this.set('summernote', summernote);
+    // set the editor not to query it in 
+    const editor = this.element.querySelector('.note-editable');
+    this.set('editor', editor);
     $(this.summernote).summernote('code', this.text);
   },
 
@@ -19,8 +19,7 @@ export default Component.extend({
     // this is the desired height,
     // but component height is changed automatically by CSS,
     // so we dont need to set it
-    const editor = this.element.querySelector('.note-editable');
-    const height = editor.scrollHeight;
+    const height = this.editor.scrollHeight;
     this.set('height', `${height}px`);
   },
 
